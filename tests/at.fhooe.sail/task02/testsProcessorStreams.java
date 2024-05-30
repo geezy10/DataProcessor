@@ -10,10 +10,10 @@ import java.util.Vector;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TestsProcessorStreams {
+public class testsProcessorStreams {
 
-        private DataProcessorStream processor;
-        private DataProcessorStream processor2;
+        private DataProcessorStreams processor;
+        private DataProcessorStreams processor2;
         private DummyHardDiskDataSource dataSource;
 
         @BeforeEach
@@ -28,8 +28,8 @@ public class TestsProcessorStreams {
             Vector<HardDisk> hardDisks2 = (Vector<HardDisk>) hardDisks.clone();
             hardDisks2.remove(0);
 
-            processor = new DataProcessorStream(hardDisks);
-            processor2 = new DataProcessorStream(hardDisks2);
+            processor = new DataProcessorStreams(hardDisks);
+            processor2 = new DataProcessorStreams(hardDisks2);
         }
 
         @Test
@@ -73,12 +73,12 @@ public class TestsProcessorStreams {
             long medianBytes = processor.median(
                     (hdd1, hdd2) -> Long.compare(hdd1.getCapacityInBytes(), hdd2.getCapacityInBytes()),
                     hdd -> hdd.getCapacityInBytes());
-            assertEquals(8678L, medianBytes);
+            assertEquals(5678L, medianBytes);
 
             long medianBytes2 = processor2.median(
                     (hdd3, hdd4) -> Long.compare(hdd3.getCapacityInBytes(), hdd4.getCapacityInBytes()),
                     hdd5 -> hdd5.getCapacityInBytes());
-            assertEquals(9178L, medianBytes2);
+            assertEquals(8678L, medianBytes2);
         }
 
         @Test

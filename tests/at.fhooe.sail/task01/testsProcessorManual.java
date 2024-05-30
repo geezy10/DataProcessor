@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import at.fhhgb.mc.opr.backblazedata.model.HardDisk;
 
 
-public class TestsProcessorManual {
+public class testsProcessorManual {
 
     private DataProcessorManual processor;
     private DataProcessorManual processor2;
