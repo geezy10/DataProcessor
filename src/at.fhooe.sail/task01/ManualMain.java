@@ -46,13 +46,12 @@ public class ManualMain {
         long medianDiskBytes = processor.median(comparator, HardDisk::getCapacityInBytes);
         System.out.println("Median disk capacity: " + medianDiskBytes + " bytes");
 
-        //countDistinctStrings
         long distinctStrings = processor.countDistinctStrings(HardDisk::getModel);
         System.out.println("Number of distinct models: " + distinctStrings);
 
         long distinctSerials = processor.median(comparator, hdd -> (long) hdd.getSmartValues().size());
         System.out.println("Median Number of SmartValues: " + distinctSerials);
 
-        //
+
     }
 }

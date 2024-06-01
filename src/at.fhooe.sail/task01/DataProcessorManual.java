@@ -80,10 +80,10 @@ public class DataProcessorManual {
         long sum = 0;
         hardDisks.sort(sortingComparator);
         if (hardDisks.size() % 2 == 0) {
-            sum = function.apply(hardDisks.get(hardDisks.size() / 2)) + function.apply(hardDisks.get(hardDisks.size() / 2 + 1));
+            sum = function.apply(hardDisks.get(hardDisks.size() / 2-1)) + function.apply(hardDisks.get(hardDisks.size() / 2));
             return sum / 2;
         } else {
-            return function.apply(hardDisks.get(hardDisks.size() / 2 + 1 ));
+            return function.apply(hardDisks.get(hardDisks.size() / 2));
         }
 
 

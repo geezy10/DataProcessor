@@ -1,10 +1,12 @@
 package at.fhooe.sail.task01;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Vector;
 
 import at.fhooe.sail.DummyHardDiskDataSource;
+import at.fhooe.sail.task02.DataProcessorStreams;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,8 +16,8 @@ import at.fhhgb.mc.opr.backblazedata.model.HardDisk;
 public class testsProcessorManual {
 
     private DataProcessorManual processor;
-    private DataProcessorManual processor2;
     private DummyHardDiskDataSource dataSource;
+    private DataProcessorManual processor2;
 
     @BeforeEach
     public void setUp() {
@@ -24,18 +26,20 @@ public class testsProcessorManual {
         HardDisk disk;
         while ((disk = dataSource.next()) != null) {
             hardDisks.add(disk);
-        }
+        }Vector<HardDisk> hardDisks2 = (Vector<HardDisk>) hardDisks.clone();
+		hardDisks2.remove(0);
 
-        Vector<HardDisk> hardDisks2 = (Vector<HardDisk>) hardDisks.clone();
-        hardDisks2.remove(0);
+		processor = new DataProcessorManual(hardDisks);
+		processor2 = new DataProcessorManual(hardDisks2);
+	}
 
-        processor = new DataProcessorManual(hardDisks);
-        processor2 = new DataProcessorManual(hardDisks2);
-    }
 
     @Test
     public void testSort() {
-
+        processor.sort((hdd1, hdd2) -> Long.compare(hdd1.getCapacityInBytes(), hdd2.getCapacityInBytes()));
+        Vector<HardDisk> sortedHardDisks = processor.filter(hdd -> true);
+        assertEquals(1678L, sortedHardDisks.firstElement().getCapacityInBytes());
+        assertEquals(9678L, sortedHardDisks.lastElement().getCapacityInBytes());
     }
 
 
@@ -74,12 +78,7 @@ public class testsProcessorManual {
         long medianBytes = processor.median(
                 (hdd1, hdd2) -> Long.compare(hdd1.getCapacityInBytes(), hdd2.getCapacityInBytes()),
                 hdd -> hdd.getCapacityInBytes());
-        assertEquals(8678L, medianBytes);
-
-        long medianBytes2 = processor2.median(
-                (hdd3, hdd4) -> Long.compare(hdd3.getCapacityInBytes(), hdd4.getCapacityInBytes()),
-                hdd5 -> hdd5.getCapacityInBytes());
-        assertEquals(9178L, medianBytes2);
+        assertEquals(5678L, medianBytes);
     }
 
     @Test
@@ -88,4 +87,26 @@ public class testsProcessorManual {
         assertEquals(5, serialCount);
     }
 
+
+    @Test
+    public void testNoHardDisksException() {
+        // Create an empty vector
+        Vector<HardDisk> hardDisks = new Vector<>();
+        DataProcessorManual processor = new DataProcessorManual(hardDisks);
+        assertThrows(Exception.class, () -> processor.max((hdd1, hdd2) -> Long.compare(hdd1.getCapacityInBytes(), hdd2.getCapacityInBytes())));
+        assertThrows(Exception.class, () -> processor.min((hdd1, hdd2) -> Long.compare(hdd1.getCapacityInBytes(), hdd2.getCapacityInBytes())));
+        assertThrows(Exception.class, () -> processor.mean(hdd -> hdd.getCapacityInBytes()));
+        assertThrows(Exception.class, () -> processor.median((hdd1, hdd2) -> Long.compare(hdd1.getCapacityInBytes(), hdd2.getCapacityInBytes()), hdd -> hdd.getCapacityInBytes()));
+    }
+
+    @Test
+    public void testMedianEven() throws Exception {
+        long medianBytes = processor2.median(
+                (hdd1, hdd2) -> Long.compare(hdd1.getCapacityInBytes(), hdd2.getCapacityInBytes()),
+                hdd -> hdd.getCapacityInBytes());
+        assertEquals(5678L, medianBytes);
+    }
 }
+
+
+
